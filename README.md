@@ -67,15 +67,6 @@ open index.html
 
 🔗 [View Live Site](https://ubahjoy.github.io/Studex-landing-page-/)
 
----
-
-## Screenshots
-
-**Tablet View**
-<!-- Add screenshot here -->
-
----
-
 ## Key Decisions
 
 **1. Chose a study productivity tool as the product**
