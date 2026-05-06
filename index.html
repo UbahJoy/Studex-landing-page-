@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Studex– Study Smarter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c28;
+      --accent:#3b82f6 ;
+      --accent2:#f5f5f5; 
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --border: rgba(124, 109, 250, 0.2);
+      --glow: rgba(124, 109, 250, 0.15);
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== NOISE TEXTURE OVERLAY ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 5%;
+      background: rgba(10,10,15,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { opacity: 0.85; transform: scale(1.03); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* Mobile nav */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 5%;
+      z-index: 99;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .mobile-menu a:hover { color: var(--text); }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 5% 5rem;
+      overflow: hidden;
+    }
+
+    /* Background glow orbs */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,109,250,0.18) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      animation: fadeUp 0.6s ease both;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent2);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 780px; }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero h1 .yellow { color: var(--accent2); }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(124,109,250,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px rgba(124,109,250,0.5);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      padding: 0.9rem 2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-secondary:hover {
+      background: var(--surface2);
+      border-color: var(--accent);
+    }
+
+    /* Stats strip */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 4rem;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== SECTION BASE ===== */
+    section { position: relative; z-index: 1; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 300;
+      max-width: 480px;
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 6rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .features-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .features-header .section-sub { margin: 0 auto; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,109,250,0.4);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--glow);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid var(--border);
+    }
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials {
+      padding: 6rem 5%;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .testimonials-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .testimonials-header .section-sub { margin: 0 auto; }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .testimonial-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.3s;
+    }
+    .testimonial-card:hover { transform: translateY(-3px); }
+
+    .stars {
+      color: var(--accent2);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .author-role {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      padding: 4rem 5% 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 3rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .footer-brand p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.8rem;
+      max-width: 260px;
+    }
+    .footer-links-group {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+    .footer-col h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.6rem; }
+    .footer-col a {
+      font-size: 0.88rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .footer-socials {
+      display: flex;
+      gap: 1rem;
+    }
+    .social-link {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .social-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+
+      .hero-stats { gap: 2rem; }
+
+      .footer-top { flex-direction: column; gap: 2rem; }
+      .footer-links-group { gap: 2rem; }
+
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.4rem; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      .hero-actions { flex-direction: column; }
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+      padding: 6rem 5%;
+      text-align: center;
+    }
+    .cta-box {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 4rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(124,109,250,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-box h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .cta-box p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    .cta-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 400px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .cta-input {
+      flex: 1;
+      padding: 0.85rem 1.2rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      min-width: 180px;
+      transition: border-color 0.2s;
+    }
+    .cta-input:focus { border-color: var(--accent); }
+    .cta-input::placeholder { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav>
+    <div class="logo">Stu<span>dex</span></div>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Get Started Free</a>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#features" onclick="toggleMenu()">Features</a>
+    <a href="#testimonials" onclick="toggleMenu()">Reviews</a>
+    <a href="#pricing" onclick="toggleMenu()">Pricing</a>
+    <a href="#cta" onclick="toggleMenu()">Get Started Free →</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Now with AI Study Coach
+      </div>
+      <h1>Study <em>Smarter.</em><br>Score <span class="yellow">Higher.</span></h1>
+      <p class="hero-sub">Studex combines the Pomodoro technique, spaced repetition, and AI insights to help you study less and retain more.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn-primary">Start for Free →</a>
+        <a href="#features" class="btn-secondary">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">120<span>k+</span></div>
+          <div class="stat-label">Active Students</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4.9<span>★</span></div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3<span>×</span></div>
+          <div class="stat-label">Better Retention</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features" id="features">
+    <div class="features-header">
+      <p class="section-label">What We Offer</p>
+      <h2 class="section-title">Everything you need to<br>ace your exams</h2>
+      <p class="section-sub">Built for students who are serious about results without burning out.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Smart Pomodoro Timer</h3>
+        <p>Adaptive study sessions that adjust to your energy levels throughout the day, not a rigid 25-minute block.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>AI-Powered Flashcards</h3>
+        <p>Upload your notes and our AI automatically generates high-quality flashcards and quiz questions for you.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Progress Analytics</h3>
+        <p>Track your study hours, retention rates, and weak spots with beautiful dashboards that actually make sense.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔁</div>
+        <h3>Spaced Repetition</h3>
+        <p>Our algorithm shows you the right card at the right time — so you remember things long after the exam.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Study Groups</h3>
+        <p>Create or join study rooms with friends, share decks, and hold each other accountable in real time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Goal Tracking</h3>
+        <p>Set weekly study targets, earn streaks, and get gentle nudges when you're drifting off schedule.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials" id="testimonials">
+    <div class="testimonials-inner">
+      <div class="testimonials-header">
+        <p class="section-label">Student Reviews</p>
+        <h2 class="section-title">Real results from real students</h2>
+        <p class="section-sub">Don't take our word for it — here's what our community says.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"I went from barely passing to a distinction in one semester. The spaced repetition alone is worth the subscription. I can't imagine studying without it now."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background: linear-gradient(135deg, #7c6dfa, #a78bfa);">AK</div>
+            <div>
+              <div class="author-name">Amara K.</div>
+              <div class="author-role">Medical Student, Year 2</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"The AI flashcard generator is genuinely magical. I dumped my lecture slides in, and it pulled out every key concept. Saved me hours every week."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background: linear-gradient(135deg, #f7c948, #fbbf24);">JO</div>
+            <div>
+              <div class="author-name">James O.</div>
+              <div class="author-role">Law Student, Final Year</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">"I have ADHD and always struggled to stay focused. Studex adaptive timer and short breaks are the first thing that actually works for my brain."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background: linear-gradient(135deg, #34d399, #059669);">FN</div>
+            <div>
+              <div class="author-name">Fatima N.</div>
+              <div class="author-role">Computer Science, Year 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section" id="cta">
+    <div class="cta-box">
+      <p class="section-label">Get Started Today</p>
+      <h2>Your best study session<br>starts here.</h2>
+      <p>Join 120,000+ students already studying smarter. Free forever — upgrade when you're ready.</p>
+      <div class="cta-form">
+        <input type="email" class="cta-input" placeholder="Enter your email..." />
+        <a href="#" class="btn-primary" style="white-space:nowrap;">Join Free →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">stu<span>dex</span></div>
+        <p>Study smarter, not harder. Built for students who want real results.</p>
+      </div>
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Studex. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="#" class="social-link">𝕏</a>
+        <a href="#" class="social-link">in</a>
+        <a href="#" class="social-link">ig</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JS ===== -->
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobileMenu');
+      const btn = document.querySelector('.hamburger');
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>
