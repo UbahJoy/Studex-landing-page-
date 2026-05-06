@@ -1,4 +1,4 @@
-# FocusFlow – Study Productivity Landing Page
+# Studex– Study Productivity Landing Page
 
 A responsive landing page built as Week 1 Task for my frontend development internship.
 
@@ -6,7 +6,7 @@ A responsive landing page built as Week 1 Task for my frontend development inter
 
 ## Project Overview
 
-FocusFlow is a mock study productivity tool that helps students study smarter using the Pomodoro technique, AI-generated flashcards, and spaced repetition. This project is a fully responsive marketing landing page for the product.
+Studex is a mock study productivity tool that helps students study smarter using the Pomodoro technique, AI-generated flashcards, and spaced repetition. This project is a fully responsive marketing landing page for the product.
 
 ---
 
@@ -72,15 +72,7 @@ open index.html
 
 ## Screenshots
 
-> *(Add your screenshots here after taking them on desktop, tablet, and mobile)*
-
-**Desktop View**
-<!-- Add screenshot here -->
-
 **Tablet View**
-<!-- Add screenshot here -->
-
-**Mobile View**
 <!-- Add screenshot here -->
 
 ---
@@ -106,4 +98,4 @@ Vanilla JS was used only for the mobile menu toggle. This keeps the page lightwe
 
 ## Author
 
-Built by [Your Name] — Week 1 Frontend Development Internship Task
+Built by Ubah Joy — Week 1 Frontend Development Internship Task
