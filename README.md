@@ -66,7 +66,7 @@ open index.html
 
 ## Live Demo
 
-🔗 [View Live Site](https://YOUR-USERNAME.github.io/focusflow-landing-page/)
+🔗 [View Live Site](https://ubahjoy.github.io/Studex-landing-page-/)
 
 ---
 
