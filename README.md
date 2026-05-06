@@ -57,8 +57,7 @@ No installation required. This is a plain HTML project.
 
 **To clone via terminal:**
 ```bash
-git clone https://github.com/YOUR-USERNAME/focusflow-landing-page.git
-cd focusflow-landing-page
+git clone https://ubahjoy.github.io/Studex-landing-page-/
 open index.html
 ```
 
